@@ -1,3 +1,4 @@
+import utils.session
 medical_change_url='https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/insurance.csv'
 
 from urllib.request import urlretrieve
@@ -269,3 +270,46 @@ plt.ylabel('Charges')
 plt.title('Actual Data vs Model Prediction Lines')
 plt.legend() 
 plt.show()
+
+
+#Test the predections 
+# ==========================================
+# 🚀 INTERACTIVE PREDICTION (USER INPUT)
+# ==========================================
+
+print("\n" + "="*40)
+print("🏥 MEDICAL CHARGE PREDICTOR")
+print("="*40)
+
+# 1. Get inputs from the user
+try:
+    user_age = int(input("Enter Age (e.g., 25): "))
+    user_bmi = float(input("Enter BMI (e.g., 28.5): "))
+    user_smoker_str = input("Is the person a smoker? (yes/no): ").strip().lower()
+
+    # 2. Convert the text 'yes'/'no' into the 1/0 the model expects
+    if user_smoker_str == 'yes' or user_smoker_str == 'y':
+        smoker_val = 1
+        smoker_text = "Smoker"
+    else:
+        smoker_val = 0
+        smoker_text = "Non-Smoker"
+
+    # 3. Create a DataFrame for the model
+    user_data = pd.DataFrame({
+        'age': [user_age],
+        'bmi': [user_bmi],
+        'smoker_yes': [smoker_val]
+    })
+
+    # 4. Make the prediction
+    predicted_cost = model.predict(user_data)[0]
+
+    # 5. Print the result nicely
+    print("\n" + "-"*40)
+    print(f"Patient Profile: {user_age} years old | BMI: {user_bmi} | {smoker_text}")
+    print(f"💰 Predicted Medical Charges: ${predicted_cost:,.2f}")
+    print("-"*40 + "\n")
+
+except ValueError:
+    print("\n❌ Error: Please enter a valid number for Age and BMI.")
